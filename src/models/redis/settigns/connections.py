@@ -1,6 +1,6 @@
 from redis import Redis
 
-class RedisConnetionHandler:
+class RedisConnectionHandler:
     
     def __init__(self) -> None:
         self.__redis_conn = None
@@ -18,3 +18,6 @@ class RedisConnetionHandler:
     def get_connection(self) -> Redis:
         return self.__redis_conn
         
+    
+redis_connection_handler = RedisConnectionHandler()
+redis_connection_handler.connect()
