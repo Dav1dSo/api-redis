@@ -1,9 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, DECIMAL
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
-
-class Product(Base):
+from factory import db
+class Product(db.Model):
     __tablename__ = 'products'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
