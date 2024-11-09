@@ -15,4 +15,14 @@ def test_insert_product():
         }
         
         repo.insert_product(data)
+
+def test_fin_product():
+    
+    with app.app_context():
+        repo = ProductsRepository()
         
+        id_product = 1
+        
+        product = repo.find_product_by_id(id_product)
+        
+        assert product != None

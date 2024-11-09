@@ -1,7 +1,8 @@
 from factory import db
+from src.models.mysql.interfaces.ProductRepositoryInterface import ProductsRepositoryInterface
 from src.models.mysql.entities.products import Product
 import logging
-class ProductsRepository:
+class ProductsRepository(ProductsRepositoryInterface):
         
     def find_product_by_id(self, product_id: int) -> dict:
         product = db.session.query(Product).filter(Product.id == product_id).first()
