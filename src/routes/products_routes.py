@@ -10,13 +10,12 @@ from src.data.product_create import ProductCreator
 
 products_routes_bp = Blueprint("products_router", __name__, url_prefix="/products")
 
+redis_repo = RedisRepository()
+product_repo = ProductsRepository()
+
 @products_routes_bp.route("/create", methods=["POST"])
 def create_product():
-    try:
-        
-        redis_repo = RedisRepository()
-        product_repo = ProductsRepository()
-        
+    try:        
         product_creator = ProductCreator(redis_repo, product_repo)
         http_request = HttpRequest(body=request.json)
         http_response: HttpResponse = product_creator.create(http_request)
@@ -27,7 +26,7 @@ def create_product():
 @products_routes_bp.route("/find-product/<int:product_id>", methods=["GET"])
 def find_product(product_id):
     try:
-        product_finder = ProductFinder(RedisRepository, ProductsRepository)
+        product_finder = ProductFinder(redis_repo, product_repo)
         http_request = HttpRequest(params={"product_id": product_id})
         http_response: HttpResponse = product_finder.find_by_name(http_request)
         return jsonify(http_response.body), http_response.status_code

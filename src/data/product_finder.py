@@ -18,8 +18,7 @@ class ProductFinder:
         self.__product_repo = product_repo
 
     def find_by_name(self, http_request: HttpRequest) -> HttpResponse:
-        product_id = http_request.__params["product_id"]
-        product = None
+        product_id = http_request.params["product_id"]
 
         product = self.__find_in_cache(product_id)
         if not product:
@@ -30,27 +29,34 @@ class ProductFinder:
 
     def __find_in_cache(self, product_id: str) -> tuple:
         product_infos = self.__redis_repo.get_key(product_id)
-
         if product_infos:
             product_infos_list = product_infos.split(",")
-            return (0, product_id, product_infos_list[0], product_infos_list[1])
+            return {
+                "product_id": product_id,
+                "name": product_infos_list[0],
+                "price": product_infos_list[1],
+            }
 
         return None
 
-    def __find_in_sql(self, product_id: str) -> tuple:
+    def __find_in_sql(self, product_id: str):
         product = self.__product_repo.find_product_by_id(product_id)
         if not product:
             raise Exception("Produto não encontrado")
 
         return product
 
-    def __insert_in_cache(self, product: tuple) -> None:
-        product_id = product[1]
-        value = f"{product[2], product[3]}"
+    def __insert_in_cache(self, product) -> None:
+        product_id = product.id
+        value = f"{product.name},{product.price}"
         self.__redis_repo.insert_ex(product_id, value, ex=60)
 
-    def __format_response(self, product: tuple) -> HttpResponse:
+    def __format_response(self, product) -> HttpResponse:
         return HttpResponse(
             status_code=200,
-            body={"name": product[1], "price": product[2], "quantity": product[3]},
+            body={
+                "name": product.name,        
+                "price": product.price,      
+                "quantity": product.quantity 
+            },
         )
