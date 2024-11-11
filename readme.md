@@ -72,7 +72,7 @@ A API possui as seguintes funcionalidades:
 1. **Clone o repositório**:
     ```bash
     git clone https://github.com/Dav1dSo/api-redis.git
-    cd sua-repositorio
+    cd api-redis
     ```
 
 2. **Crie e ative o ambiente virtual**:
